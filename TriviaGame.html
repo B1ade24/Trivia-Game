@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        #question-container {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #feedback-container {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container"></div>
+    <div id="answer-buttons" class="btn-container"></div>
+    <div id="feedback-container" class="hide"></div>
+    <button id="next-button" class="btn hide" onclick="nextQuestion()">Next</button>
+    <button id="restart-button" class="btn hide" onclick="restartGame()">Restart</button>
+
+    <script>
+        const questions = [
+            {
+                type: "individual",
+                year: 2011,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2012,
+                correctAnswer: "David",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2013,
+                correctAnswer: "Aaron",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2014,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2015,
+                correctAnswer: "David",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2016,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2017,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2018,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2019,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2020,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2021,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2022,
+                correctAnswer: "Mark",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "individual",
+                year: 2023,
+                correctAnswer: "Luke",
+                options: shuffle(["Mark", "David", "Aaron", "Luke"])
+            },
+            {
+                type: "team",
+                year: 2011,
+                correctAnswer: "Wisconsin",
+                options: shuffle(["Ohio State", "Michigan", "Michigan State", "Wisconsin"])
+            },
+            {
+                type: "team",
+                year: 2012,
+                correctAnswer: "Wisconsin",
+                options: shuffle(["Ohio State", "Michigan", "Michigan State", "Wisconsin"])
+            },
+            {
+                type: "team",
+                year: 2013,
+                correctAnswer: "Michigan State",
+                options: shuffle(["Ohio State", "Michigan", "Wisconsin", "Michigan State"])
+            },
+            {
+                type: "team",
+                year: 2014,
+                correctAnswer: "Ohio State",
+                options: shuffle(["Michigan State", "Michigan", "Wisconsin", "Ohio State"])
+            },
+            {
+                type: "team",
+                year: 2015,
+                correctAnswer: "Michigan State",
+                options: shuffle(["Ohio State", "Michigan", "Wisconsin", "Michigan State"])
+            },
+            {
+                type: "team",
+                year: 2016,
+                correctAnswer: "Penn State",
+                options: shuffle(["Ohio State", "Michigan", "Wisconsin", "Penn State"])
+            },
+            {
+                type: "team",
+                year: 2017,
+                correctAnswer: "Ohio State",
+                options: shuffle(["Michigan State", "Michigan", "Wisconsin", "Ohio State"])
+            },
+            {
+                type: "team",
+                year: 2018,
+                correctAnswer: "Ohio State",
+                options: shuffle(["Michigan State", "Michigan", "Wisconsin", "Ohio State"])
+            },
+            {
+                type: "team",
+                year: 2019,
+                correctAnswer: "Ohio State",
+                options: shuffle(["Michigan State", "Michigan", "Wisconsin", "Ohio State"])
+            },
+            {
+                type: "team",
+                year: 2020,
+                correctAnswer: "Ohio State",
+                options: shuffle(["Michigan State", "Michigan", "Wisconsin", "Ohio State"])
+            },
+            {
+                type: "team",
+                year: 2021,
+                correctAnswer: "Michigan",
+                options: shuffle(["Ohio State", "Michigan State", "Wisconsin", "Michigan"])
+            },
+            {
+                type: "team",
+                year: 2022,
+                correctAnswer: "Michigan",
+                options: shuffle(["Ohio State", "Michigan State", "Wisconsin", "Michigan"])
+            },
+            {
+                type: "team",
+                year: 2023,
+                correctAnswer: "Michigan",
+                options: shuffle(["Ohio State", "Michigan State", "Wisconsin", "Michigan"])
+            },
+            {
+                type: "mvp",
+                year: 2011,
+                team: "Wisconsin",
+                correctAnswer: "Russell Wilson",
+                options: shuffle(["Russell Wilson", "Montee Ball", "Le'Veon Bell", "Kirk Cousins"])
+            },
+            {
+                type: "mvp",
+                year: 2012,
+                team: "Wisconsin",
+                correctAnswer: "Montee Ball",
+                options: shuffle(["Montee Ball", "James White", "Melvin Gordon", "Russell Wilson"])
+            },
+            {
+                type: "mvp",
+                year: 2013,
+                team: "Michigan State",
+                correctAnswer: "Connor Cook",
+                options: shuffle(["Connor Cook", "L. J. Scott", "Tony Lippett", "Braxton Miller"])
+            },
+            {
+                type: "mvp",
+                year: 2014,
+                team: "Ohio State",
+                correctAnswer: "Cardale Jones",
+                options: shuffle(["Cardale Jones", "Joey Bosa", "Ezekiel Elliot", "Devin Smith"])
+            },
+            {
+                type: "mvp",
+                year: 2015,
+                team: "Michigan State",
+                correctAnswer: "Connor Cook",
+                options: shuffle(["Connor Cook", "L. J. Scott", "Aaron Burbridge", "Tevaun Smith"])
+            },
+            {
+                type: "mvp",
+                year: 2016,
+                team: "Penn State",
+                correctAnswer: "Trace McSorley",
+                options: shuffle(["Trace McSorley", "Saquon Barkley", "Saeed Blacknall", "Mike Gesicki"])
+            },
+            {
+                type: "mvp",
+                year: 2017,
+                team: "Ohio State",
+                correctAnswer: "J. K. Dobbins",
+                options: shuffle(["J. K. Dobbins", "Trey Sermon", "Justin Fields", "Dwayne Haskins"])
+            },
+            {
+                type: "mvp",
+                year: 2018,
+                team: "Ohio State",
+                correctAnswer: "Dwayne Haskins",
+                options: shuffle(["Dwayne Haskins", "J. K. Dobbins", "Trey Sermon", "Justin Fields"])
+            },
+            {
+                type: "mvp",
+                year: 2019,
+                team: "Ohio State",
+                correctAnswer: "Justin Fields",
+                options: shuffle(["Justin Fields", "Dwayne Haskins", "J. K. Dobbins", "Trey Sermon"])
+            },
+            {
+                type: "mvp",
+                year: 2020,
+                team: "Ohio State",
+                correctAnswer: "Trey Sermon",
+                options: shuffle(["Trey Sermon", "Justin Fields", "Dwayne Haskins", "J. K. Dobbins"])
+            },
+            {
+                type: "mvp",
+                year: 2021,
+                team: "Michigan",
+                correctAnswer: "Aidan Hutchinson",
+                options: shuffle(["Aidan Hutchinson", "Donovan Edwards", "JJ McCarthy", "Mike Saninristil"])
+            },
+            {
+                type: "mvp",
+                year: 2022,
+                team: "Michigan",
+                correctAnswer: "Donovan Edwards",
+                options: shuffle(["Donovan Edwards", "Mike Saninristil", "Aidan Hutchinson", "JJ McCarthy"])
+            },
+            {
+                type: "mvp",
+                year: 2023,
+                team: "Michigan",
+                correctAnswer: "Mike Saninristil",
+                options: shuffle(["Mike Saninristil", "Aidan Hutchinson", "Donovan Edwards", "JJ McCarthy"])
+            }
+        ];
+
+        const questionContainer = document.getElementById('question-container');
+        const answerButtons = document.getElementById('answer-buttons');
+        const nextButton = document.getElementById('next-button');
+        const restartButton = document.getElementById('restart-button');
+        const feedbackContainer = document.getElementById('feedback-container');
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            restartButton.classList.add('hide');
+
+            // Shuffle the questions array
+            const shuffledQuestions = shuffle(questions);
+            // Select the first 20 questions
+            const selectedQuestions = shuffledQuestions.slice(0, 20);
+
+            // Use the selected questions for the game
+            questions.length = 0; // Clear the original questions array
+            questions.push(...selectedQuestions);
+
+            showQuestion(questions[currentQuestionIndex]);
+        }
+
+        function showQuestion(question) {
+            nextButton.classList.add('hide');
+            feedbackContainer.classList.add('hide');
+            if (question.type === "individual") {
+                questionContainer.innerHTML = `Who won in ${question.year}?`;
+            } else if (question.type === "team") {
+                questionContainer.innerHTML = `Which team won in ${question.year}?`;
+            } else if (question.type === "mvp") {
+                questionContainer.innerHTML = `Who was the MVP when ${question.team} won in ${question.year}?`;
+            }
+            answerButtons.innerHTML = '';
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.classList.add('btn');
+                button.addEventListener('click', () => selectAnswer(option, question.correctAnswer));
+                answerButtons.appendChild(button);
+            });
+        }
+
+        function shuffle(array) {
+            // Fisher-Yates shuffle algorithm
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectAnswer(selectedOption, correctAnswer) {
+            nextButton.classList.remove('hide');
+            if (selectedOption === correctAnswer) {
+                correctAnswers++;
+                showFeedback("Correct!");
+            } else {
+                showFeedback(`Incorrect. The correct answer is ${correctAnswer}.`);
+            }
+        }
+
+        function showFeedback(message) {
+            feedbackContainer.innerText = message;
+            feedbackContainer.classList.remove('hide');
+        }
+
+        function nextQuestion() {
+            nextButton.classList.add('hide');
+            feedbackContainer.classList.add('hide');
+            if (currentQuestionIndex < questions.length - 1) {
+                // Show the next question
+                currentQuestionIndex++;
+                showQuestion(questions[currentQuestionIndex]);
+            } else {
+                // End of the game
+                endGame();
+            }
+        }
+
+        function endGame() {
+            answerButtons.innerHTML = '';
+            feedbackContainer.classList.add('hide');
+            if (correctAnswers === questions.length) {
+                questionContainer.innerText = "Are you Mr. Barrel?";
+            } else if (correctAnswers > questions.length / 2) {
+                questionContainer.innerText = "Mr. Barrel approves!";
+            } else {
+                questionContainer.innerText = "Mr. Barrel disapproves.";
+            }
+            restartButton.classList.remove('hide');
+        }
+
+        function restartGame() {
+            startGame();
+            restartButton.classList.add('hide');
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
