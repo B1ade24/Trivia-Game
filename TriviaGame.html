@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,8 +39,8 @@
         }
     </style>
 </head>
+
 <body style="background-color: white;">
-<body>
     <div id="question-container"></div>
     <div id="answer-buttons" class="btn-container"></div>
     <div id="feedback-container" class="hide"></div>
@@ -294,7 +295,33 @@
                 team: "Michigan",
                 correctAnswer: "Mike Saninristil",
                 options: shuffle(["Mike Saninristil", "Aidan Hutchinson", "Donovan Edwards", "JJ McCarthy"])
-            }
+            },
+            {
+                type: "field_goals",
+                correctAnswer: "David and Adam",
+                options: shuffle(["Aaron and David", "David and Adam", "Mark and David", "Luke and Aaron"])
+            },
+            {
+                type: "dive_pass",
+                correctAnswer: "Adam",
+                options: shuffle(["Aaron", "Adam", "Mark", "David", "Luke", "Joey"])
+            },
+            {
+                type: "speed_pitch",
+                correctAnswer: "50",
+                options: shuffle(["50", "46", "48", "44", "52", "54"])
+            },
+            {
+                type: "jersey_number",
+                correctAnswer: "423",
+                options: shuffle(["423", "387", "442", "356", "498", "412"])
+            },
+            {
+                type: "first_scorer",
+                correctAnswer: "Terry McLaurin",
+                options: shuffle(["Terry McLaurin", "Blake Corum", "J. K. Dobbins", "Chris Olave"])
+            },
+
         ];
 
         const questionContainer = document.getElementById('question-container');
@@ -313,7 +340,7 @@
             // Shuffle the questions array
             const shuffledQuestions = shuffle(questions);
             // Select the first 20 questions
-            const selectedQuestions = shuffledQuestions.slice(0, 20);
+            const selectedQuestions = shuffledQuestions.slice(0, 25);
 
             // Use the selected questions for the game
             questions.length = 0; // Clear the original questions array
@@ -325,19 +352,31 @@
         function showQuestion(question) {
             nextButton.classList.add('hide');
             feedbackContainer.classList.add('hide');
+
             if (question.type === "individual") {
                 questionContainer.innerHTML = `Who won in ${question.year}?`;
             } else if (question.type === "team") {
                 questionContainer.innerHTML = `Which team won in ${question.year}?`;
             } else if (question.type === "mvp") {
                 questionContainer.innerHTML = `Who was the MVP when ${question.team} won in ${question.year}?`;
+            } else if (question.type === "field_goals") {
+                questionContainer.innerHTML = `Which two competitors have kicked over 5 field goals since 2018?`;
+            } else if (question.type === "dive_pass") {
+                questionContainer.innerHTML = `Who has caught every dive pass since 2018?`;
+            } else if (question.type === "speed_pitch") {
+                questionContainer.innerHTML = `What is our highest speed thrown (by Mark) at speed pitch since 2018?`;
+            } else if (question.type === "jersey_number") {
+                questionContainer.innerHTML = `What is the combined total of the jersey number of first scorers since 2011?`;
+            } else if (question.type === "first_scorer") {
+                questionContainer.innerHTML = `Who is the only player to be the first TD scorer in multiple Big Ten Championship Games?`;
             }
+
             answerButtons.innerHTML = '';
             question.options.forEach(option => {
                 const button = document.createElement('button');
                 button.innerText = option;
                 button.classList.add('btn');
-                button.addEventListener('click', () => selectAnswer(option, question.correctAnswer));
+                button.addEventListener('click', () => selectAnswer(option, question.correctAnswer, question.type));
                 answerButtons.appendChild(button);
             });
         }
@@ -351,13 +390,25 @@
             return array;
         }
 
-        function selectAnswer(selectedOption, correctAnswer) {
+        function selectAnswer(selectedOption, correctAnswer, questionType) {
             nextButton.classList.remove('hide');
-            if (selectedOption === correctAnswer) {
-                correctAnswers++;
-                showFeedback("Correct!");
+
+            if (questionType === "field_goals") {
+                // Check if the selected option is the correct answer
+                if (selectedOption === correctAnswer) {
+                    correctAnswers++;
+                    showFeedback("Correct!");
+                } else {
+                    showFeedback(`Incorrect. The correct answer is David and Adam.`);
+                }
             } else {
-                showFeedback(`Incorrect. The correct answer is ${correctAnswer}.`);
+                // Handle other question types as before
+                if (selectedOption === correctAnswer) {
+                    correctAnswers++;
+                    showFeedback("Correct!");
+                } else {
+                    showFeedback(`Incorrect. The correct answer is ${correctAnswer}.`);
+                }
             }
         }
 
@@ -369,6 +420,7 @@
         function nextQuestion() {
             nextButton.classList.add('hide');
             feedbackContainer.classList.add('hide');
+
             if (currentQuestionIndex < questions.length - 1) {
                 // Show the next question
                 currentQuestionIndex++;
@@ -380,24 +432,34 @@
         }
 
         function endGame() {
-            answerButtons.innerHTML = '';
-            feedbackContainer.classList.add('hide');
-            if (correctAnswers === questions.length) {
-                questionContainer.innerText = "Are you Mr. Barrel?";
-            } else if (correctAnswers > questions.length / 2) {
-                questionContainer.innerText = "Mr. Barrel approves!";
-            } else {
-                questionContainer.innerText = "Mr. Barrel disapproves.";
-            }
-            restartButton.classList.remove('hide');
-        }
+    answerButtons.innerHTML = '';
+    feedbackContainer.classList.add('hide');
 
-        function restartGame() {
-            startGame();
-            restartButton.classList.add('hide');
-        }
+    const totalQuestions = questions.length;
+    const playerScore = correctAnswers;
 
-        startGame();
-    </script>
+    let resultMessage = "";
+    if (correctAnswers === totalQuestions) {
+        resultMessage = "Are you Mr. Barrel?";
+    } else if (correctAnswers > totalQuestions / 2) {
+        resultMessage = "Mr. Barrel approves!";
+    } else {
+        resultMessage = "Mr. Barrel disapproves.";
+    }
+
+    // Display score information
+    questionContainer.innerHTML = `${resultMessage} Your score: ${playerScore} out of ${totalQuestions}`;
+    
+    restartButton.classList.remove('hide');  // Show the restart button
+}
+
+function restartGame() {
+    startGame();
+    restartButton.classList.add('hide');
+}
+
+startGame();
+</script>
 </body>
+
 </html>
